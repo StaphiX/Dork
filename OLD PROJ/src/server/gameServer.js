@@ -127,7 +127,7 @@ class Game
         console.log('GameCreated ' + JSON.stringify(this.gameState, null, 4));
 
         this.playerCount = 0;
-        this.playerRefreshTimer = setTimeout(this.refreshPlayerList, 4000);
+        //this.playerRefreshTimer = setTimeout(this.refreshPlayerList, 4000);
     }
 
     connect(socketID, clientIp, storedID, storedPlayer)

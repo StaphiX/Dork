@@ -10,7 +10,7 @@
       "sourceMap": true,
       "allowJs": true,
       "jsx": "react",
-      "rootDir": "src/",
+      //"rootDir": "src/",
       "outDir": "./built",
       "baseUrl": "src/",
     },
@@ -19,6 +19,7 @@
     ],
     "exclude": [
       "./node_modules/**/*",
-      "./built"
+      "./dist",
+      "./src/server"
     ]
   }

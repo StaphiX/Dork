@@ -4,7 +4,7 @@ module.exports = function(env, argv) {
 
 // default to the server configuration
 const base = {
-        entry: "./src/server.js",
+        entry: "./src/server/server.js",
         output: {
             filename: "server.js",
             path: __dirname + "/dist"
@@ -21,10 +21,23 @@ const base = {
         module: {
             rules: [
                 // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-                { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+                { test: /\.(js|ts|tsx)$/, loader: "awesome-typescript-loader" },
 
                 // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-                { enforce: "pre", test: /\.js$/, loader: "source-map-loader", exclude: '/node_modules/'}
+                { enforce: "pre", test: /\.js$/, loader: "source-map-loader", exclude: '/node_modules/'},
+
+                // CSS style loader
+                {
+                    test: /\.css$/,
+                    use: [
+                        {
+                            loader: 'style-loader',
+                        },
+                        {
+                            loader: 'css-loader',
+                        },
+                    ],
+                },
             ]
         },
 
@@ -48,9 +61,8 @@ const base = {
 
   // client-specific configurations
   if (env.platform === 'client') {
-    base.target = 'react';
     base.entry = './src/index.tsx';
-    base.output.filename = 'js/client.js';
+    base.output.filename = 'client.js';
   }
 
   return base;

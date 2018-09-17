@@ -7,24 +7,33 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "webpack --env.platform=server",
     "client": "webpack --env.platform=client",
-    "startserver": "node dist/server.js"
+    "startserver": "node dist/server.js",
+    "start": "webpack-dev-server --env.platform=client --mode development --open --hot"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/react": "^16.4.14",
     "@types/react-dom": "^16.0.7",
+    "@types/socket.io": "^1.4.38",
+    "@types/socket.io-client": "^1.4.32",
+    "@types/universal-cookie": "^2.2.0",
     "express": "^4.16.3",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "universal-cookie": "^3.0.4",
+    "webpack": "^4.19.0",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8",
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^5.2.1",
+    "css-loader": "^1.0.0",
     "source-map-loader": "^0.2.4",
+    "style-loader": "^0.23.0",
     "typescript": "^3.0.3"
   }
 }
