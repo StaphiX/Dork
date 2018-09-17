@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "allowSyntheticDefaultImports": true,
+      "target": "ES6",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "noResolve": false,
+      //"noImplicitAny": false,
+      "removeComments": true,
+      "sourceMap": true,
+      "allowJs": true,
+      "jsx": "react",
+      "rootDir": "src/client",
+      "outDir": "./built",
+      "baseUrl": "src/client",
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+      "./node_modules/**/*",
+      "./built"
+    ]
+  }
