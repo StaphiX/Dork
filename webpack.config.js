@@ -1,4 +1,10 @@
 var nodeExternals = require('webpack-node-externals');
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+
+const htmlPlugin = new HtmlWebPackPlugin({
+  template: "./src/indexTemplate.html",
+  filename: "./index.html"
+});
 
 module.exports = function(env, argv) {
 
@@ -46,11 +52,11 @@ const base = {
         // This is important because it allows us to avoid bundling all of our
         // dependencies, which allows browsers to cache those libraries between builds.
         externals: [
-            {
-                "react": "React",
-                "react-dom": "ReactDOM",
-            },
-                nodeExternals()
+            //{
+                //"react": "React",
+                //"react-dom": "ReactDOM",
+            //},
+                //nodeExternals()
             ]       
     }
 
@@ -63,6 +69,7 @@ const base = {
   if (env.platform === 'client') {
     base.entry = './src/index.tsx';
     base.output.filename = 'client.js';
+    base.plugins = [htmlPlugin];
   }
 
   return base;
