@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { PlayerType } from "../../common/clientPlayer";
 
-class StatusBar extends Component {
+type StatusBarState = { playerType: PlayerType };
+
+class StatusBar extends Component<any, StatusBarState> {
     constructor(props) {
       super(props);
       this.state = {

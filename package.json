@@ -8,7 +8,8 @@
     "server": "webpack --env.platform=server",
     "client": "webpack --env.platform=client",
     "startserver": "node dist/server.js",
-    "start": "webpack-dev-server --env.platform=client --mode development --open --hot"
+    "start:dev": "webpack-dev-server --env.platform=client --mode development --open --hot",
+    "start:sdev": "webpack-dev-server --env.platform=server --mode development --open --hot"
   },
   "author": "",
   "license": "ISC",

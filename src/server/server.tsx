@@ -2,7 +2,7 @@ const express = require('express')
 const http = require('http')
 const socketIO = require('socket.io')
 //const login = require('./login.js');
-const GameServer = require('./gameServer.js');
+import { GameServer } from "./gameServer"
 
 // our localhost port
 const port = 4001
@@ -37,6 +37,7 @@ io.on('connection', socket =>
   // disconnect is fired when a client leaves the server
   socket.on('disconnect', () => {
     console.log('user disconnected')
+    gameServer.disconnect(socket);
   })
 })
 

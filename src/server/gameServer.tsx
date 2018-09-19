@@ -1,17 +1,21 @@
-const fs = require('fs');
-var { ClientState, PlayerType  } = require("../common/clientPlayer");
+import { ClientState, PlayerType  } from "../common/clientPlayer";
 
-const PlayMode = 
+enum PlayMode
 {
-  NONE: "NONE",
-  WAITINGFORMASTER: "WAITINGFORMASTER",
-  WAITINGFORPLAYERS: "WAITINGFORPLAYERS",
-  READY: "READY",
-  INGAME: "INGAME",
+  NONE = "NONE",
+  WAITINGFORMASTER = "WAITINGFORMASTER",
+  WAITINGFORPLAYERS = "WAITINGFORPLAYERS",
+  READY = "READY",
+  INGAME = "INGAME",
 }
 
 class GameState
 {
+    playmode: PlayMode;
+    host: ClientState;
+    master: ClientState;
+    playerList: Array<ClientState>;
+
     constructor()
     {
         this.playmode = PlayMode.NONE,
@@ -63,6 +67,19 @@ class GameState
             this.addPlayer(client);
     }
 
+    setOffline(socketID)
+    {
+        console.log("set offline - " + socketID);
+
+        var iPlayer;
+        for (iPlayer = 0; iPlayer < this.playerList.length; iPlayer++) 
+        {  
+            var clientState = this.playerList[iPlayer];
+            if(clientState.socketID === socketID)
+                this.playerList[iPlayer].connected = false;
+        }
+    }
+
     getHost()
     {
         return this.host;
@@ -73,16 +90,16 @@ class GameState
         return this.master;
     }
 
-    getClient(playerID)
+    getClient(socketID)
     {
         var iPlayer;
         for (iPlayer = 0; iPlayer < this.playerList.length; iPlayer++) 
         {  
-            console.log("ID To Find - " + playerID);
+            console.log("ID To Find - " + socketID);
 
             var attributes = this.playerList[iPlayer];
             console.log("PLAYER [" + iPlayer + "] \n" + JSON.stringify(attributes));
-            if(attributes.playerID === playerID)
+            if(attributes.socketID === socketID)
                 return this.playerList[iPlayer];
         }
 
@@ -91,7 +108,6 @@ class GameState
 
     getClientByIP(ipaddress)
     {
-        var selectedPlayer = -1;
         var iPlayer;
         for (iPlayer = 0; iPlayer < this.playerList.length; iPlayer++) 
         {  
@@ -101,25 +117,20 @@ class GameState
             console.log("PLAYER [" + iPlayer + "] \n" + JSON.stringify(attributes));
             if(attributes.ipaddress === ipaddress)
             {
-                if(selectedPlayer === -1)
-                    selectedPlayer = iPlayer;
-                else
-                {
-                    console.log("Multiple Users Sharing IP");
-                    break;
-                }
+                return this.playerList[iPlayer];
             }
         }
 
-        if(selectedPlayer !== -1)
-            return this.playerList[selectedPlayer];
-        else
-            return null;
+        return null;
     }
 }
 
 class Game
 {
+    gameServer: GameServer;
+    gameState: GameState;
+    playerCount: Number;
+
     constructor(gameServer) {
         this.gameServer = gameServer;
         this.gameState = new GameState();
@@ -136,7 +147,7 @@ class Game
         if(storedID !== null)
             client = this.getClient(storedID);
 
-        if(client === null)
+        if(client === null || client.connection == true)
             client = this.getClientByIP(clientIp);
 
         // Attempt to reconnect
@@ -147,7 +158,7 @@ class Game
             {
                 // Update the client state
                 client.socketID = socketID;
-                client.ipaddress = ipaddress;
+                client.ipaddress = clientIp;
                 client.connection = true;
 
                 this.sendCreateMessage(client);
@@ -165,6 +176,11 @@ class Game
         }
 
         return client;
+    }
+
+    disconnect(socketID)
+    {
+        this.gameState.setOffline(socketID);
     }
 
     addConnection(socketID, ipaddress)
@@ -229,8 +245,11 @@ class Game
     }
 }
 
-class GameServer 
+export class GameServer 
 {
+    io: any;
+    game: Game;
+
     constructor(io) {
       this.io = io;
       this.game = new Game(this);
@@ -247,6 +266,11 @@ class GameServer
         client = this.game.connect(socket.id, clientIP, storedID, storedPlayer);
     }
 
+    disconnect(socket)
+    {
+        this.game.disconnect(socket.id);
+    }
+
     sendMessage(clientState, messageType, data)
     {
         console.log("Sending Msg - " + clientState.playerType + " - " + messageType);
@@ -257,5 +281,3 @@ class GameServer
             this.io.to(`${clientState.socketID}`).emit(messageType, data);
     }
 }
-
-module.exports = GameServer

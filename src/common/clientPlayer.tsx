@@ -1,12 +1,18 @@
-export const PlayerType = 
+export enum PlayerType 
 {
-  NONE: "NONE",
-  PLAYER: "PLAYER",
-  MASTER: "MASTER",
-  HOST: "HOST"
+  NONE = "NONE",
+  PLAYER = "PLAYER",
+  MASTER = "MASTER",
+  HOST = "HOST"
 };
 
 export class ClientState {
+    
+    socketID: SocketIOClient.Socket;
+    ipaddress: string;
+    connected: boolean;
+    playerType: PlayerType;
+
     constructor(socketID, ipaddress) {
         this.socketID = socketID;
         this.ipaddress = ipaddress;
@@ -21,6 +27,9 @@ export class ClientState {
 }
 
 export class GameClient {
+
+    clientState : ClientState;
+
     constructor(clientState) {
         this.clientState = clientState;
       }
@@ -66,6 +75,8 @@ export class GameMaster extends GameClient
 
 export class GameHost extends GameClient
 {
+    playerList: Array<ClientState>;
+
     constructor(clientState) {
         super(clientState);
         this.playerList = null;
