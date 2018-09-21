@@ -3,7 +3,7 @@ import { PlayerType } from "../../common/clientPlayer";
 
 type StatusBarState = { playerType: PlayerType };
 
-class StatusBar extends Component<any, StatusBarState> {
+export class StatusBar extends Component<any, StatusBarState> {
     constructor(props) {
       super(props);
       this.state = {
@@ -44,5 +44,3 @@ class StatusBar extends Component<any, StatusBarState> {
     )
   }
 }
-
-export default StatusBar;
